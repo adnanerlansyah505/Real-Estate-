@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealEstate - Build Your Future, One Property at a Time</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            lime: '#d4f542',
+                            'lime-hover': '#c4f036',
+                            dark: '#111315',
+                            card: '#f8f9fb',
+                            subtle: '#6c727f',
+                            border: '#e5e7eb'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcfcfd;
+            color: #111315;
+            overflow-x: hidden;
+        }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .map-bg {
+            background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-900 selection:bg-brand-lime selection:text-black">
+
+    <!-- Floating Header -->
+    <header class="fixed top-4 inset-x-0 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pointer-events-none">
+        <div class="glass-nav rounded-full px-4 py-2.5 flex items-center justify-between shadow-lg pointer-events-auto border border-white/40 bg-white/70">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2 font-bold text-lg tracking-tight pl-2">
+                <span class="w-8 h-8 rounded-full bg-brand-dark text-white flex items-center justify-center font-extrabold text-sm">
+                    R
+                </span>
+                <span>RealEstate</span>
+            </a>
+
+            <!-- Nav Links (Desktop) -->
+            <nav class="hidden md:flex items-center gap-1 bg-gray-100/80 px-3 py-1.5 rounded-full border border-gray-200/50 text-sm font-medium">
+                <button type="button" onclick="navigateTo('home')" class="px-3 py-1 rounded-full text-black hover:bg-white transition-all shadow-sm">Home</button>
+                <a href="#about"  class="px-3 py-1 rounded-full text-gray-600 hover:text-black hover:bg-white/50 transition-all">About</a>
+                <a href="#properties" onclick="navigateTo('listings')" class="px-3 py-1 rounded-full text-gray-600 hover:text-black hover:bg-white/50 transition-all">Properties</a>
+                <a href="#faq"  class="px-3 py-1 rounded-full text-gray-600 hover:text-black hover:bg-white/50 transition-all">Faq</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="hidden sm:flex items-center gap-2">
+                <button type="button" onclick="navigateTo('signin')" class="inline-flex px-4 py-2 text-sm font-semibold text-gray-800 hover:text-black transition">Sign In</button>
+                <button type="button" onclick="navigateTo('signup')"  class="px-5 py-2 text-sm font-semibold bg-brand-lime text-black rounded-full hover:bg-brand-lime-hover transition shadow-sm flex items-center gap-1">
+                    Sign Up
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Hamburger Button -->
+            <div class="md:hidden flex items-center">
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Toggle Mobile Menu" class="p-2 text-slate-700 hover:text-slate-900 rounded-xl hover:bg-slate-100/80 transition-colors focus:outline-none">
+                    <i id="menuIcon" data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Dropdown Menu -->
+        <div id="mobileMenu" class="hidden md:hidden mt-2 glass-panel border border-slate-200/80 shadow-xl rounded-2xl p-5 flex flex-col gap-4 animate-fadeIn relative z-[100] pointer-events-auto">
+            <nav class="flex flex-col gap-1 font-medium text-slate-700">
+                <a href="#home" onclick="navigateTo('home');" class="px-3 py-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-3">
+                    <i data-lucide="home" class="w-4 h-4 text-slate-500"></i> Home
+                </a>
+                <a href="#about" onclick="closeMobileMenu()" class="px-3 py-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-3">
+                    <i data-lucide="info" class="w-4 h-4 text-slate-500"></i> About
+                </a>
+                <a href="#properties" onclick="navigateTo('listings');" class="px-3 py-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-3">
+                    <i data-lucide="building" class="w-4 h-4 text-slate-500"></i> Properties
+                </a>
+                <a href="#faq" onclick="closeMobileMenu()" class="px-3 py-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-colors flex items-center gap-3">
+                    <i data-lucide="help-circle" class="w-4 h-4 text-slate-500"></i> FAQ
+                </a>
+            </nav>
+            <div class="pt-3 border-t border-slate-200/60 flex flex-col gap-2">
+                <button type="button" onclick="navigateTo('signin');" class="w-full text-center py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition-colors">
+                    Sign In
+                </button>
+                <button type="button" onclick="navigateTo('signup');" class="w-full text-center py-2.5 text-sm font-semibold text-slate-900 bg-lime-400 hover:bg-lime-300 rounded-xl transition-all shadow-sm">
+                    Sign Up
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="min-h-screen pt-24 pb-12 md:pt-28 md:pb-20">
+        <section id="page-home" class="page-section active">
+
+            <!-- Hero Section -->
+            <section id="hero" class="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-[90vh] flex flex-col justify-between">
+                <!-- Hero Background Container -->
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl min-h-[580px] md:min-h-[640px] flex flex-col justify-between p-6 sm:p-10 md:p-12 text-white">
+                    <!-- Background Image with Gradient Overlay -->
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80" 
+                         alt="Luxury Modern Architecture" 
+                         class="absolute inset-0 w-full h-full object-cover object-center" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/30"></div>
+        
+                    <!-- Top Hero Tags -->
+                    <div class="relative z-10 flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-semibold tracking-wide uppercase">Modern</span>
+                        <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-semibold tracking-wide uppercase">Super Luxury</span>
+                        <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-semibold tracking-wide uppercase">Pre-packaged</span>
+                    </div>
+        
+                    <!-- Middle Title & Text Grid -->
+                    <div class="relative z-10 grid md:grid-cols-12 gap-6 items-end my-auto py-8">
+                        <div class="md:col-span-7">
+                            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] text-white">
+                                Build Your Future, One Property at a Time.
+                            </h1>
+                        </div>
+                        <div class="md:col-span-5 md:pl-6">
+                            <p class="text-gray-200 text-sm sm:text-base leading-relaxed font-light">
+                                Discover modern architecture designed for life. From tailored luxury estates to affordable compact urban hubs, we help you find the place where memories start.
+                            </p>
+                        </div>
+                    </div>
+        
+                    <!-- Floating Search / Filter Bar Card -->
+                    <div class="relative z-20 w-full glass-card rounded-2xl p-4 sm:p-6 text-gray-900 shadow-2xl bg-white/95">
+                        <div class="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
+                            <h3 class="font-bold text-gray-900 text-base">Find the best place</h3>
+                            <!-- Filter Tabs -->
+                            <div class="flex items-center gap-1 bg-gray-100 p-1 rounded-full text-xs font-semibold">
+                                <button onclick="setFilterTab('buy')" id="tab-buy" class="filter-tab px-4 py-1.5 rounded-full bg-white shadow-sm text-black transition">Buy</button>
+                                <button onclick="setFilterTab('rent')" id="tab-rent" class="filter-tab px-4 py-1.5 rounded-full text-gray-500 hover:text-black transition">Rent</button>
+                                <button onclick="setFilterTab('sell')" id="tab-sell" class="filter-tab px-4 py-1.5 rounded-full text-gray-500 hover:text-black transition">Sell</button>
+                            </div>
+                        </div>
+        
+                        <!-- Form Fields Grid -->
+                        <form onsubmit="event.preventDefault(); triggerSearch();" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <!-- Location -->
+                            <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition">
+                                <label class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Location</label>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-gray-500"></i>
+                                    <select class="w-full bg-transparent text-sm font-semibold text-gray-900 focus:outline-none cursor-pointer">
+                                        <option>California, USA</option>
+                                        <option>New York, USA</option>
+                                        <option>Miami, Florida</option>
+                                        <option>Austin, Texas</option>
+                                    </select>
+                                </div>
+                            </div>
+        
+                            <!-- Property Type -->
+                            <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition">
+                                <label class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Type</label>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="home" class="w-4 h-4 text-gray-500"></i>
+                                    <select class="w-full bg-transparent text-sm font-semibold text-gray-900 focus:outline-none cursor-pointer">
+                                        <option>Modern Villa</option>
+                                        <option>Penthouse</option>
+                                        <option>Townhouse</option>
+                                        <option>Compact Studio</option>
+                                    </select>
+                                </div>
+                            </div>
+        
+                            <!-- Price Range -->
+                            <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200/80 hover:border-gray-300 transition">
+                                <label class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Price Range</label>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="dollar-sign" class="w-4 h-4 text-gray-500"></i>
+                                    <select class="w-full bg-transparent text-sm font-semibold text-gray-900 focus:outline-none cursor-pointer">
+                                        <option>$500k - $1.5M</option>
+                                        <option>$1.5M - $3.0M</option>
+                                        <option>$3.0M - $5.0M</option>
+                                        <option>$5.0M+</option>
+                                    </select>
+                                </div>
+                            </div>
+        
+                            <!-- Search Button -->
+                            <div class="flex items-center">
+                                <button type="submit" class="w-full h-full min-h-[46px] bg-brand-dark text-white hover:bg-black transition rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-[0.99]">
+                                    <i data-lucide="search" class="w-4 h-4 text-brand-lime"></i>
+                                    <span>Search Now</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Feature Grid Section -->
+            <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-10 gap-4">
+                    <div>
+                        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight max-w-2xl text-gray-900 leading-tight">
+                            Your primary home might begin to feel left out.
+                        </h2>
+                    </div>
+                    <!-- Top Right Highlight Tag -->
+                    <div class="flex items-center gap-3 bg-white p-2.5 pr-5 rounded-2xl border border-gray-100 shadow-sm">
+                        <div class="w-10 h-10 rounded-xl bg-brand-lime flex items-center justify-center text-black font-bold">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-900">100% Certified Property Listing</p>
+                            <p class="text-[11px] text-gray-500">Verified by real estate experts</p>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- 3-Column Visual Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    <!-- Left Large Showcase Card -->
+                    <div class="lg:col-span-7 relative group rounded-3xl overflow-hidden shadow-lg border border-gray-100 min-h-[380px] flex flex-col justify-between p-6">
+                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80" 
+                             alt="Luxury House Exterior" 
+                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                        
+                        <div class="relative z-10 flex justify-end">
+                            <span class="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-xs font-bold text-gray-900 shadow-sm">Featured Estate</span>
+                        </div>
+        
+                        <div class="relative z-10 flex justify-between items-end">
+                            <div>
+                                <span class="text-xs uppercase tracking-wider font-semibold text-brand-lime">Architectural Marvel</span>
+                                <h3 class="text-2xl text-white font-bold">The Obsidian Glass Villa</h3>
+                            </div>
+                            <!-- Small Avatars Cluster Badge -->
+                            <div class="hidden sm:flex items-center gap-2 glass-card px-3 py-1.5 rounded-full text-xs text-white">
+                                <div class="flex -space-x-2">
+                                    <img class="w-6 h-6 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Agent">
+                                    <img class="w-6 h-6 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Agent">
+                                </div>
+                                <span class="text-xs font-medium text-gray-800">12+ Viewed today</span>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Right Column Grid (Stack of two cards) -->
+                    <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                        <!-- Top Info Box Card -->
+                        <div class="bg-gray-100/80 rounded-3xl p-6 border border-gray-200/60 flex flex-col justify-between hover:bg-gray-100 transition">
+                            <div>
+                                <div class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-900 mb-4">
+                                    <i data-lucide="sparkles" class="w-5 h-5 text-yellow-500"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">Big things can happen in small spaces.</h3>
+                                <p class="text-xs text-gray-600 leading-relaxed">
+                                    Smart design transforms compact footprint properties into ultra-functional luxury spaces engineered for high efficiency and relaxation.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-200/60 flex justify-end">
+                                <button class="text-xs font-bold text-gray-900 hover:text-brand-lime flex items-center gap-1 transition">
+                                    Read Article <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+        
+                        <!-- Secondary Small Showcase Card -->
+                        <div class="relative group rounded-3xl overflow-hidden shadow-md min-h-[200px] flex flex-col justify-end p-5">
+                            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Compact Modern Home" 
+                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                            
+                            <div class="relative z-10 flex items-center justify-between">
+                                <div>
+                                    <span class="text-[10px] font-semibold uppercase tracking-wider text-brand-lime">Primary Choice in Canada</span>
+                                    <h4 class="text-lg font-bold text-white">Modern Haven Villa</h4>
+                                </div>
+                                <a href="#properties" onclick="navigateTo('detail')" class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:bg-brand-lime transition shadow-md">
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Key Metrics Stats Row -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-10 border-t border-gray-200">
+                    <div class="text-left">
+                        <p class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">100%</p>
+                        <p class="text-xs text-gray-500 font-medium mt-1">Satisfaction Guarantee</p>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">500+</p>
+                        <p class="text-xs text-gray-500 font-medium mt-1">Properties Listed</p>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">150+</p>
+                        <p class="text-xs text-gray-500 font-medium mt-1">Expert Agents On Board</p>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">2,000+</p>
+                        <p class="text-xs text-gray-500 font-medium mt-1">Happy Customers</p>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Interactive Map & Value Section -->
+            <section class="py-12 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="bg-gray-50 rounded-3xl border border-gray-200/80 p-6 sm:p-10 lg:p-12 grid lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Map Visualization Box (Left Column) -->
+                    <div class="lg:col-span-7 relative h-[360px] sm:h-[400px] w-full rounded-2xl overflow-hidden bg-slate-100 border border-gray-200 map-bg flex items-center justify-center p-4">
+                        <!-- SVG Map Roads Vector Styling -->
+                        <svg class="absolute inset-0 w-full h-full opacity-40" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M -50 100 Q 150 200 300 150 T 600 300 T 900 200" fill="none" stroke="#94a3b8" stroke-width="8"/>
+                            <path d="M 100 -50 Q 200 150 150 350 T 400 500" fill="none" stroke="#cbd5e1" stroke-width="6"/>
+                            <path d="M 0 300 Q 250 280 500 320 T 900 100" fill="none" stroke="#e2e8f0" stroke-width="12"/>
+                        </svg>
+        
+                        <!-- Interactive Floating Pins -->
+                        <!-- Pin 1 -->
+                        <div class="absolute top-[28%] left-[22%] z-10 transition-all duration-300 hover:scale-110 cursor-pointer">
+                            <div class="bg-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 border border-gray-700">
+                                <span class="w-2 h-2 rounded-full bg-brand-lime animate-ping"></span>
+                                <span>$1.25M Villa</span>
+                            </div>
+                        </div>
+        
+                        <!-- Pin 2 (Featured Active Pin) -->
+                        <div class="absolute top-[52%] left-[48%] z-20 transition-all duration-300 hover:scale-105 cursor-pointer">
+                            <div class="glass-card bg-white p-2.5 rounded-2xl shadow-2xl border border-brand-lime flex items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=120&q=80" alt="Pin preview" class="w-12 h-12 rounded-xl object-cover">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-900">Highland Park</p>
+                                    <p class="text-[11px] font-extrabold text-green-600">$890,000</p>
+                                    <span class="inline-block bg-green-100 text-green-800 text-[9px] font-semibold px-2 py-0.5 rounded-full">Best Value</span>
+                                </div>
+                            </div>
+                            <!-- Pin Tail Point -->
+                            <div class="w-3 h-3 bg-white border-r border-b border-brand-lime transform rotate-45 mx-auto -mt-1.5"></div>
+                        </div>
+        
+                        <!-- Pin 3 -->
+                        <div class="absolute bottom-[20%] right-[18%] z-10 transition-all duration-300 hover:scale-110 cursor-pointer">
+                            <div class="bg-brand-dark text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 border border-gray-700">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-lime"></i>
+                                <span>$2.10M Estate</span>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Content Details (Right Column) -->
+                    <div class="lg:col-span-5 space-y-5">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-200/70 text-xs font-semibold text-gray-700">
+                            <i data-lucide="compass" class="w-3.5 h-3.5 text-gray-900"></i>
+                            <span>Smart Geolocation Filter</span>
+                        </div>
+        
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                            Discover Properties with the Best Value
+                        </h2>
+        
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Our AI-driven real estate index cross-evaluates neighborhood appreciation rates, amenities, and market trends to match you with top-value properties before they hit mainstream listings.
+                        </p>
+        
+                        <div class="pt-2">
+                            <a href="#properties" class="inline-flex items-center gap-2 px-6 py-3 bg-brand-dark text-white text-sm font-semibold rounded-full hover:bg-black transition shadow-md hover:shadow-lg active:scale-95">
+                                <span>Get Started Now</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-brand-lime"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Premier Houses Grid Section -->
+            <section id="properties" class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <!-- Section Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
+                    <div>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+                            Explore our premier houses
+                        </h2>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-1">Handpicked luxury properties verified by our architectural experts.</p>
+                    </div>
+                    <a href="#properties" onclick="navigateTo('listings')" class="px-5 py-2.5 bg-brand-dark text-white hover:bg-black transition text-xs font-semibold rounded-full shadow-sm flex items-center gap-2">
+                        <span>See All Properties</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-brand-lime"></i>
+                    </a>
+                </div>
+        
+                <!-- 6 Card Grid (3x2 on Desktop) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Property Card 1 -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                        <div class="relative h-60 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Property" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-gray-900 shadow-sm">For Sale</span>
+                            <button onclick="toggleFavorite(this)" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md text-gray-700 flex items-center justify-center hover:bg-white hover:text-red-500 transition shadow-sm">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <!-- Features / Specs Row -->
+                                <div class="flex items-center gap-3 text-xs text-gray-500 font-medium mb-2">
+                                    <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5"></i> 4 Beds</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="bath" class="w-3.5 h-3.5"></i> 3 Baths</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> 2,800 sqft</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-black transition">The Pinnacle at Highland Park</h3>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 font-semibold uppercase">Starting Price</span>
+                                    <p class="text-xl font-extrabold text-gray-900">$1,250,000</p>
+                                </div>
+                                <button type="button" onclick="navigateTo('detail')" class="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-brand-lime text-black flex items-center justify-center transition">
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Property Card 2 -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                        <div class="relative h-60 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Property" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-gray-900 shadow-sm">For Sale</span>
+                            <button onclick="toggleFavorite(this)" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md text-gray-700 flex items-center justify-center hover:bg-white hover:text-red-500 transition shadow-sm">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-3 text-xs text-gray-500 font-medium mb-2">
+                                    <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5"></i> 3 Beds</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="bath" class="w-3.5 h-3.5"></i> 2 Baths</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> 2,100 sqft</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-black transition">The Minimalist Timber Retreat</h3>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 font-semibold uppercase">Starting Price</span>
+                                    <p class="text-xl font-extrabold text-gray-900">$890,000</p>
+                                </div>
+                                <a href="#hero" onclick="navigateTo('detail')" class="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-brand-lime text-black flex items-center justify-center transition">
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Property Card 3 -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                        <div class="relative h-60 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Property" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-gray-900 shadow-sm">For Sale</span>
+                            <button onclick="toggleFavorite(this)" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md text-gray-700 flex items-center justify-center hover:bg-white hover:text-red-500 transition shadow-sm">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-3 text-xs text-gray-500 font-medium mb-2">
+                                    <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5"></i> 5 Beds</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="bath" class="w-3.5 h-3.5"></i> 4 Baths</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> 3,900 sqft</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-black transition">Modern Prairie Modernist Villa</h3>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 font-semibold uppercase">Starting Price</span>
+                                    <p class="text-xl font-extrabold text-gray-900">$2,450,000</p>
+                                </div>
+                                <a href="#hero" onclick="navigateTo('detail')" class="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-brand-lime text-black flex items-center justify-center transition">
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Property Card 4 -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                        <div class="relative h-60 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Property" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-gray-900 shadow-sm">For Rent</span>
+                            <button onclick="toggleFavorite(this)" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md text-gray-700 flex items-center justify-center hover:bg-white hover:text-red-500 transition shadow-sm">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-3 text-xs text-gray-500 font-medium mb-2">
+                                    <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5"></i> 2 Beds</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="bath" class="w-3.5 h-3.5"></i> 2 Baths</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> 1,400 sqft</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-black transition">Urban Glass Penthouse</h3>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 font-semibold uppercase">Monthly Rent</span>
+                                    <p class="text-xl font-extrabold text-gray-900">$4,500 <span class="text-xs font-normal text-gray-400">/mo</span></p>
+                                </div>
+                                <a href="#hero" onclick="navigateTo('detail')" class="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-brand-lime text-black flex items-center justify-center transition">
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Property Card 5 -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                        <div class="relative h-60 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Property" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-gray-900 shadow-sm">For Sale</span>
+                            <button onclick="toggleFavorite(this)" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md text-gray-700 flex items-center justify-center hover:bg-white hover:text-red-500 transition shadow-sm">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-3 text-xs text-gray-500 font-medium mb-2">
+                                    <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5"></i> 4 Beds</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="bath" class="w-3.5 h-3.5"></i> 3 Baths</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> 3,100 sqft</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-black transition">Cedar Creek Lakeside Lodge</h3>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 font-semibold uppercase">Starting Price</span>
+                                    <p class="text-xl font-extrabold text-gray-900">$1,780,000</p>
+                                </div>
+                                <a href="#hero" onclick="navigateTo('detail')" class="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-brand-lime text-black flex items-center justify-center transition">
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Property Card 6 -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                        <div class="relative h-60 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Property" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-gray-900 shadow-sm">For Sale</span>
+                            <button onclick="toggleFavorite(this)" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md text-gray-700 flex items-center justify-center hover:bg-white hover:text-red-500 transition shadow-sm">
+                                <i data-lucide="heart" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-3 text-xs text-gray-500 font-medium mb-2">
+                                    <span class="flex items-center gap-1"><i data-lucide="bed" class="w-3.5 h-3.5"></i> 3 Beds</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="bath" class="w-3.5 h-3.5"></i> 2.5 Baths</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> 2,250 sqft</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-black transition">The Glasshouse Meadow Manor</h3>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 font-semibold uppercase">Starting Price</span>
+                                    <p class="text-xl font-extrabold text-gray-900">$1,150,000</p>
+                                </div>
+                                <a href="#hero" onclick="navigateTo('detail')" class="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-brand-lime text-black flex items-center justify-center transition">
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+            </section>
+        
+            <!-- FAQ Section -->
+            <section id="faq" class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="grid lg:grid-cols-12 gap-10 items-start">
+                    <!-- Left Side Title -->
+                    <div class="lg:col-span-5">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                            Frequently asked questions
+                        </h2>
+                        <p class="text-sm text-gray-500 mt-3 leading-relaxed">
+                            Everything you need to know about purchasing, inspecting, and securing financing through our real estate platform.
+                        </p>
+                    </div>
+        
+                    <!-- Right Accordion Container -->
+                    <div class="lg:col-span-7 space-y-4">
+                        
+                        <!-- Accordion Item 1 (Default Open) -->
+                        <div class="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all shadow-sm">
+                            <button onclick="toggleFaq(this)" class="w-full p-5 text-left font-bold text-gray-900 flex justify-between items-center gap-4 hover:bg-gray-50">
+                                <span>What types of properties do you sell?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transform rotate-180 transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content px-5 pb-5 block">
+                                <div class="grid md:grid-cols-12 gap-4 items-center border-t border-gray-100 pt-4">
+                                    <div class="md:col-span-8">
+                                        <p class="text-xs text-gray-600 leading-relaxed">
+                                            We offer an curated portfolio ranging from modern suburban estates, single-family homes, high-rise luxury penthouses, and compact urban studios. All properties are vetted for structural integrity and market appreciation.
+                                        </p>
+                                    </div>
+                                    <div class="md:col-span-4">
+                                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80" 
+                                             alt="Property interior" 
+                                             class="rounded-xl object-cover h-24 w-full">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Accordion Item 2 -->
+                        <div class="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all shadow-sm">
+                            <button onclick="toggleFaq(this)" class="w-full p-5 text-left font-bold text-gray-900 flex justify-between items-center gap-4 hover:bg-gray-50">
+                                <span>How do I know if a property is a good investment?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content px-5 pb-5 hidden">
+                                <p class="text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+                                    Our proprietary data tools calculate historical neighborhood yield, projected infrastructure growth, and rental yield percentages to ensure your purchase delivers sustainable capital appreciation.
+                                </p>
+                            </div>
+                        </div>
+        
+                        <!-- Accordion Item 3 -->
+                        <div class="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all shadow-sm">
+                            <button onclick="toggleFaq(this)" class="w-full p-5 text-left font-bold text-gray-900 flex justify-between items-center gap-4 hover:bg-gray-50">
+                                <span>Do I need to hire a real estate agent?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content px-5 pb-5 hidden">
+                                <p class="text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+                                    Every purchase made through our platform comes with a dedicated licensed property advisor who handles legal contracts, escrow setup, and seller negotiations at no extra buyer surcharge.
+                                </p>
+                            </div>
+                        </div>
+        
+                        <!-- Accordion Item 4 -->
+                        <div class="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all shadow-sm">
+                            <button onclick="toggleFaq(this)" class="w-full p-5 text-left font-bold text-gray-900 flex justify-between items-center gap-4 hover:bg-gray-50">
+                                <span>What's the process for buying a property?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content px-5 pb-5 hidden">
+                                <p class="text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+                                    The process is streamlined into four steps: 1) Virtual or in-person tour, 2) Digital pre-approval offer, 3) Automated escrow deposit, and 4) Digital deed transfer completion.
+                                </p>
+                            </div>
+                        </div>
+        
+                        <!-- Accordion Item 5 -->
+                        <div class="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all shadow-sm">
+                            <button onclick="toggleFaq(this)" class="w-full p-5 text-left font-bold text-gray-900 flex justify-between items-center gap-4 hover:bg-gray-50">
+                                <span>Can I tour a property before purchasing?</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transition-transform duration-300"></i>
+                            </button>
+                            <div class="faq-content px-5 pb-5 hidden">
+                                <p class="text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+                                    Yes! You can schedule 3D 4K Virtual Walkthroughs instantly or book a private VIP on-site inspection directly from any property page.
+                                </p>
+                            </div>
+                        </div>
+        
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Testimonial Section -->
+            <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="bg-gray-50 rounded-3xl p-6 sm:p-10 border border-gray-200/80">
+                    <!-- Top Row Title + Reviews Badge -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                        <div>
+                            <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">What our clients say about us</h2>
+                        </div>
+                        <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-gray-200/80 shadow-sm">
+                            <div class="flex -space-x-2">
+                                <img class="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Client">
+                                <img class="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Client">
+                                <img class="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Client">
+                            </div>
+                            <span class="text-xs font-bold text-gray-800">More than 1,000+ Client Reviews</span>
+                        </div>
+                    </div>
+        
+                    <!-- Testimonial Content Block -->
+                    <div id="testimonial-card" class="grid md:grid-cols-12 gap-8 items-center bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                        <!-- Client Photo -->
+                        <div class="md:col-span-5 relative h-72 rounded-2xl overflow-hidden shadow-inner">
+                            <img id="testimonial-img" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Client Tyler Herman" 
+                                 class="w-full h-full object-cover">
+                        </div>
+        
+                        <!-- Blockquote Text -->
+                        <div class="md:col-span-7 flex flex-col justify-between h-full space-y-6">
+                            <div class="space-y-4">
+                                <div class="w-10 h-10 rounded-full bg-brand-lime flex items-center justify-center text-black font-extrabold text-xl">
+                                    “
+                                </div>
+                                <p id="testimonial-quote" class="text-base sm:text-lg md:text-xl font-medium text-gray-800 leading-relaxed">
+                                    "Working with this team was a pleasure. They understood our vision and helped us find a property that exceeded our expectations. We couldn't have done it without them!"
+                                </p>
+                            </div>
+        
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                <div>
+                                    <h4 id="testimonial-author" class="font-bold text-gray-900 text-base">Tyler Herman</h4>
+                                    <p id="testimonial-role" class="text-xs text-gray-500">Property Investor</p>
+                                </div>
+                                
+                                <!-- Navigation Arrows -->
+                                <div class="flex items-center gap-2">
+                                    <button onclick="prevTestimonial()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center justify-center transition">
+                                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                                    </button>
+                                    <button onclick="nextTestimonial()" class="w-9 h-9 rounded-full bg-brand-dark hover:bg-black text-white flex items-center justify-center transition">
+                                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- CTA Banner Section -->
+            <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="relative rounded-3xl overflow-hidden min-h-[340px] flex items-center justify-center p-8 sm:p-12 text-center">
+                    <!-- Background Image -->
+                    <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=80" 
+                         alt="Luxury Modern Dream Home" 
+                         class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
+        
+                    <!-- Floating Overlay Box -->
+                    <div class="relative z-10 max-w-2xl space-y-6">
+                        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                            Ready to Make Your Dream Property a Reality?
+                        </h2>
+                        <p class="text-xs sm:text-sm text-gray-200 font-light">
+                            Connect with our property specialists today and gain priority access to off-market architectural listings.
+                        </p>
+                        <div>
+                            <a href="#hero" onclick="navigateTo('detail')" class="inline-flex items-center gap-2 px-8 py-3.5 bg-brand-lime text-black font-extrabold text-sm rounded-full hover:bg-brand-lime-hover transition shadow-lg hover:scale-105 transform duration-200">
+                                <span>Get Started</span>
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+
+        <section id="page-listings" class="page-section">
+            <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <!-- Page Title Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-gray-200 pb-6">
+                    <div>
+                        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Luxury Property Listings</h1>
+                        <p class="text-sm text-gray-500 mt-1">Showing 12 verified estates across prime locations</p>
+                    </div>
+                    <!-- Search & View Controls -->
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <div class="relative flex-1 md:w-64">
+                            <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
+                            <input type="text" id="listing-search-input" onkeyup="filterPropertyListings()" placeholder="Search location or title..." class="w-full pl-9 pr-4 py-2 text-sm bg-white border border-gray-200 rounded-full focus:outline-none focus:border-brand-dark">
+                        </div>
+                        <div class="flex items-center bg-gray-100 p-1 rounded-full border border-gray-200">
+                            <button onclick="setListingView('grid')" id="view-grid-btn" class="p-1.5 rounded-full bg-white shadow-sm text-black"><i data-lucide="grid" class="w-4 h-4"></i></button>
+                            <button onclick="setListingView('list')" id="view-list-btn" class="p-1.5 rounded-full text-gray-500 hover:text-black"><i data-lucide="list" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Layout: Sidebar Filters + Property Cards -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Sidebar Filters -->
+                    <aside class="lg:col-span-3 space-y-6 bg-white p-6 rounded-3xl border border-gray-200/80 shadow-sm h-fit">
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                            <h3 class="font-bold text-gray-900 flex items-center gap-2"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Filters</h3>
+                            <button onclick="resetListingFilters()" class="text-xs text-gray-400 hover:text-black">Reset</button>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Listing Status</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                    <input type="checkbox" checked onchange="filterPropertyListings()" class="rounded border-gray-300 text-brand-dark focus:ring-brand-lime">
+                                    <span>For Sale</span>
+                                </label>
+                                <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                    <input type="checkbox" checked onchange="filterPropertyListings()" class="rounded border-gray-300 text-brand-dark focus:ring-brand-lime">
+                                    <span>For Rent</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Price Slider -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-xs font-bold uppercase text-gray-400">Max Price</label>
+                                <span id="price-value" class="text-xs font-bold text-brand-lime-dark">$5,000,000</span>
+                            </div>
+                            <input type="range" id="price-range" min="500000" max="10000000" step="250000" value="5000000" oninput="updatePriceLabel(this.value)" class="w-full accent-brand-dark cursor-pointer">
+                        </div>
+
+                        <!-- Bedrooms Selector -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Bedrooms</label>
+                            <div class="flex gap-2">
+                                <button onclick="setBedFilter(this, 'any')" class="bed-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg border border-gray-200 bg-brand-dark text-white">Any</button>
+                                <button onclick="setBedFilter(this, '3')" class="bed-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg border border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100">3+</button>
+                                <button onclick="setBedFilter(this, '4')" class="bed-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg border border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100">4+</button>
+                                <button onclick="setBedFilter(this, '5')" class="bed-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg border border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100">5+</button>
+                            </div>
+                        </div>
+
+                        <!-- Features Checkboxes -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Amenities</label>
+                            <div class="space-y-2 text-sm text-gray-700">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                    <span>Infinity Pool</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                    <span>Waterfront / Ocean View</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                    <span>Private Gym & Spa</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                    <span>Smart Home Automation</span>
+                                </label>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Property Grid Display Container -->
+                    <div class="lg:col-span-9">
+                        <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Cards will be populated dynamically by JavaScript -->
+                        </div>
+
+                        <!-- Pagination Footer -->
+                        <div class="flex items-center justify-between pt-8 mt-8 border-t border-gray-200">
+                            <p class="text-xs text-gray-500">Showing 1-6 of 12 Results</p>
+                            <div class="flex items-center gap-2">
+                                <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 cursor-not-allowed"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                                <button class="w-8 h-8 rounded-full bg-brand-dark text-white font-bold text-xs">1</button>
+                                <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center font-bold text-xs text-gray-700 hover:bg-gray-100">2</button>
+                                <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center font-bold text-xs text-gray-700 hover:bg-gray-100">3</button>
+                                <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-detail" class="page-section">
+            <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <!-- Detail Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-1">
+                            <a href="#" onclick="navigateTo('listings'); return false;" class="hover:text-black">Properties</a>
+                            <span>/</span>
+                            <span>California</span>
+                            <span>/</span>
+                            <span class="text-gray-900">The Obsidian Glass Villa</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">The Obsidian Glass Villa</h1>
+                        <p class="text-sm text-gray-500 flex items-center gap-1 mt-1"><i data-lucide="map-pin" class="w-4 h-4 text-brand-lime-dark"></i> 1048 Beverly Crest Dr, Beverly Hills, CA 90210</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <span class="text-xs text-gray-400 font-semibold uppercase">Listing Price</span>
+                            <p class="text-3xl font-extrabold text-brand-dark">$3,450,000</p>
+                        </div>
+                        <button onclick="showToast('Property saved to favorites!')" class="w-11 h-11 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 transition shadow-sm">
+                            <i data-lucide="heart" class="w-5 h-5 text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gallery Grid Hero -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-10">
+                    <div class="md:col-span-8 relative h-[420px] rounded-3xl overflow-hidden shadow-md group cursor-pointer" onclick="openGalleryModal(0)">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Main Architecture">
+                        <span class="absolute bottom-4 left-4 bg-brand-dark/80 text-white text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-md flex items-center gap-1.5">
+                            <i data-lucide="camera" class="w-3.5 h-3.5 text-brand-lime"></i> Click to View 8 High-Res Photos
+                        </span>
+                    </div>
+                    <div class="md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-4">
+                        <div class="h-[202px] rounded-2xl overflow-hidden relative cursor-pointer group" onclick="openGalleryModal(1)">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Interior Living Room">
+                        </div>
+                        <div class="h-[202px] rounded-2xl overflow-hidden relative cursor-pointer group" onclick="openGalleryModal(2)">
+                            <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Interior Kitchen">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-bold text-sm">
+                                +5 Interior Views
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Specs Bar -->
+                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200/80 mb-10 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+                    <div>
+                        <span class="text-xs text-gray-400 font-semibold uppercase">Bedrooms</span>
+                        <p class="text-2xl font-extrabold text-gray-900 flex items-center justify-center gap-2"><i data-lucide="bed" class="w-5 h-5 text-gray-500"></i> 5 Beds</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 font-semibold uppercase">Bathrooms</span>
+                        <p class="text-2xl font-extrabold text-gray-900 flex items-center justify-center gap-2"><i data-lucide="bath" class="w-5 h-5 text-gray-500"></i> 4.5 Baths</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 font-semibold uppercase">Square Feet</span>
+                        <p class="text-2xl font-extrabold text-gray-900 flex items-center justify-center gap-2"><i data-lucide="maximize-2" class="w-5 h-5 text-gray-500"></i> 4,850 sqft</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 font-semibold uppercase">Year Built</span>
+                        <p class="text-2xl font-extrabold text-gray-900 flex items-center justify-center gap-2"><i data-lucide="calendar" class="w-5 h-5 text-gray-500"></i> 2025</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Interior Visual Tour Hotspots Section -->
+                <div class="mb-12">
+                    <div class="mb-6">
+                        <span class="text-xs font-bold text-brand-lime-dark uppercase tracking-wider">Interactive Room Explorer</span>
+                        <h2 class="text-2xl font-extrabold text-gray-900">Virtual Interior Hotspot Tour</h2>
+                        <p class="text-xs text-gray-500">Click on the pulse markers to inspect architectural finishes and smart inclusions.</p>
+                    </div>
+
+                    <div class="relative w-full h-[450px] sm:h-[500px] rounded-3xl overflow-hidden shadow-xl border border-gray-200">
+                        <img id="hotspot-bg-image" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover transition duration-500" alt="Living Room Hotspot Tour">
+                        
+                        <!-- Hotspot 1: Smart Lighting -->
+                        <div class="absolute top-[35%] left-[45%] group">
+                            <button onclick="showHotspotDetail('Smart Integrated Lighting', 'Lutron Caseta wireless ambient lighting system built into floor-to-ceiling recessed ceiling channels.')" class="w-8 h-8 rounded-full bg-brand-lime text-black flex items-center justify-center hotspot-pulse font-bold text-xs cursor-pointer hover:scale-110 transition">
+                                <i data-lucide="sun" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <!-- Hotspot 2: Marble Fireplace -->
+                        <div class="absolute top-[65%] left-[28%] group">
+                            <button onclick="showHotspotDetail('Calacatta Marble Hearth', 'Hand-cut Italian Calacatta marble dual-sided gas fireplace with automated thermostat control.')" class="w-8 h-8 rounded-full bg-brand-lime text-black flex items-center justify-center hotspot-pulse font-bold text-xs cursor-pointer hover:scale-110 transition">
+                                <i data-lucide="flame" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <!-- Hotspot 3: Floor Ceiling Glass -->
+                        <div class="absolute top-[40%] right-[22%] group">
+                            <button onclick="showHotspotDetail('Acoustic Low-E Glass Walls', 'Motorized double-paned Fleetwood sliding glass walls providing seamless indoor-outdoor terrace access.')" class="w-8 h-8 rounded-full bg-brand-lime text-black flex items-center justify-center hotspot-pulse font-bold text-xs cursor-pointer hover:scale-110 transition">
+                                <i data-lucide="maximize" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <!-- Hotspot Info Callout Box -->
+                        <div id="hotspot-info-box" class="absolute bottom-6 left-6 right-6 sm:left-6 sm:right-auto sm:max-w-md glass-dark text-white p-4 rounded-2xl shadow-2xl border border-white/20">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="w-2 h-2 rounded-full bg-brand-lime"></span>
+                                <h4 id="hotspot-title" class="font-bold text-sm">Select any pulse hotspot above</h4>
+                            </div>
+                            <p id="hotspot-desc" class="text-xs text-gray-300 leading-relaxed">
+                                Hover or tap on the pulsing green targets across the room to reveal custom architectural highlights and luxury features.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-Column Section: Overview + Agent Inquiry Form -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                    <!-- Left Column: Specs, Floorplan, Map -->
+                    <div class="lg:col-span-8 space-y-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Property Overview</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed space-y-3">
+                                Nestled in the exclusive Beverly Crest enclave, The Obsidian Glass Villa is a triumph of modern architectural minimalism. Featuring sweeping panoramic city-to-ocean views, zero-edge infinity pool, dual chef's kitchens, and state-of-the-art climate automation.
+                            </p>
+                        </div>
+
+                        <!-- Features Checklist -->
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Key Inclusions</h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100"><i data-lucide="check-circle" class="w-4 h-4 text-brand-lime-dark"></i> Infinity Edge Pool</div>
+                                <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100"><i data-lucide="check-circle" class="w-4 h-4 text-brand-lime-dark"></i> Wine Cellar (500 Bot.)</div>
+                                <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100"><i data-lucide="check-circle" class="w-4 h-4 text-brand-lime-dark"></i> 4-Car Subterranean Garage</div>
+                                <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100"><i data-lucide="check-circle" class="w-4 h-4 text-brand-lime-dark"></i> Private Screening Room</div>
+                                <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100"><i data-lucide="check-circle" class="w-4 h-4 text-brand-lime-dark"></i> Solar + Tesla Powerwall</div>
+                                <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100"><i data-lucide="check-circle" class="w-4 h-4 text-brand-lime-dark"></i> Smart Security System</div>
+                            </div>
+                        </div>
+
+                        <!-- Floor Plan Interactive Tab Section -->
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold text-gray-900">Floor Plans</h3>
+                                <div class="flex items-center gap-1 bg-gray-100 p-1 rounded-full text-xs font-semibold">
+                                    <button onclick="setFloorplanTab('main')" id="fp-tab-main" class="fp-tab px-3 py-1 rounded-full bg-white shadow-sm text-black">Ground Floor</button>
+                                    <button onclick="setFloorplanTab('upper')" id="fp-tab-upper" class="fp-tab px-3 py-1 rounded-full text-gray-500">Upper Level</button>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200 text-center flex flex-col items-center justify-center min-h-[260px]">
+                                <i data-lucide="layers" class="w-12 h-12 text-gray-300 mb-3"></i>
+                                <p id="floorplan-text" class="text-sm font-bold text-gray-800">Ground Floor: 2,800 sqft | Master Suite, Great Room, Chef's Kitchen & Infinity Terrace</p>
+                                <p class="text-xs text-gray-500 mt-1">High-definition vector CAD plans available upon requested agent verification.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Agent Inquiry Card -->
+                    <div class="lg:col-span-4">
+                        <div class="bg-white rounded-3xl p-6 border border-gray-200/80 shadow-lg sticky top-24">
+                            <div class="flex items-center gap-4 mb-6 border-b border-gray-100 pb-4">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="w-14 h-14 rounded-full object-cover border-2 border-brand-lime" alt="Agent">
+                                <div>
+                                    <h4 class="font-bold text-gray-900">Elena Rostova</h4>
+                                    <p class="text-xs text-gray-500">Senior Luxury Estate Director</p>
+                                    <p class="text-xs font-bold text-brand-lime-dark mt-0.5">★ 4.98 (84 Sales)</p>
+                                </div>
+                            </div>
+
+                            <form onsubmit="handleAgentInquiry(event)" class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Your Name</label>
+                                    <input type="text" required placeholder="Alex Morgan" class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Email Address</label>
+                                    <input type="email" required placeholder="alex@example.com" class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Phone Number</label>
+                                    <input type="tel" placeholder="+1 (555) 000-0000" class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Message</label>
+                                    <textarea rows="3" class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">I would like to schedule a private tour for The Obsidian Glass Villa.</textarea>
+                                </div>
+                                <button type="submit" class="w-full py-3 bg-brand-dark text-white font-bold text-sm rounded-xl hover:bg-black transition shadow-md flex items-center justify-center gap-2">
+                                    <i data-lucide="send" class="w-4 h-4 text-brand-lime"></i>
+                                    <span>Schedule Private Tour</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-signin" class="page-section">
+            <div class="py-6 px-4 max-w-7xl mx-auto min-h-[85vh] flex items-center justify-center">
+                <div class="w-full bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 grid lg:grid-cols-12 min-h-[580px]">
+                    <!-- Left Photo Column -->
+                    <div class="lg:col-span-6 relative hidden lg:flex flex-col justify-between p-12 text-white">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" class="absolute inset-0 w-full h-full object-cover" alt="Architecture">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/30"></div>
+                        
+                        <div class="relative z-10 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-full bg-brand-lime text-black flex items-center justify-center font-extrabold text-sm">R</span>
+                            <span class="font-bold text-xl text-white">RealEstate</span>
+                        </div>
+
+                        <div class="relative z-10 space-y-3">
+                            <blockquote class="text-xl font-bold leading-relaxed">
+                                "Access exclusive off-market listings and direct agent communications."
+                            </blockquote>
+                            <p class="text-xs text-gray-300">Verified Client Portal & Portfolio Dashboard</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Form Column -->
+                    <div class="lg:col-span-6 p-8 sm:p-12 flex flex-col justify-center">
+                        <div class="max-w-md mx-auto w-full space-y-6">
+                            <div>
+                                <h2 class="text-3xl font-extrabold text-gray-900">Welcome Back</h2>
+                                <p class="text-xs text-gray-500 mt-1">Please enter your account details to sign in</p>
+                            </div>
+
+                            <form onsubmit="handleAuthSubmit(event, 'Sign In Successful!')" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Email Address</label>
+                                    <input type="email" required placeholder="alex@example.com" class="w-full px-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <label class="block text-xs font-bold uppercase text-gray-400">Password</label>
+                                        <a href="#" onclick="showToast('Password reset link sent to your email.'); return false;" class="text-xs text-brand-lime-dark hover:underline font-semibold">Forgot?</a>
+                                    </div>
+                                    <input type="password" required placeholder="••••••••" class="w-full px-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">
+                                </div>
+
+                                <div class="flex items-center justify-between text-xs text-gray-600">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" class="rounded border-gray-300 text-brand-dark focus:ring-brand-lime">
+                                        <span>Keep me signed in</span>
+                                    </label>
+                                </div>
+
+                                <button type="submit" class="w-full py-3.5 bg-brand-dark text-white font-bold text-sm rounded-xl hover:bg-black transition shadow-md">
+                                    Sign In
+                                </button>
+                            </form>
+
+                            <div class="relative flex py-2 items-center">
+                                <div class="flex-grow border-t border-gray-200"></div>
+                                <span class="flex-shrink mx-4 text-xs font-semibold text-gray-400 uppercase">Or continue with</span>
+                                <div class="flex-grow border-t border-gray-200"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="showToast('Google login initiated')" class="py-2.5 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 flex items-center justify-center gap-2 transition">
+                                    <i data-lucide="chrome" class="w-4 h-4"></i> Google
+                                </button>
+                                <button onclick="showToast('Apple login initiated')" class="py-2.5 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 flex items-center justify-center gap-2 transition">
+                                    <i data-lucide="apple" class="w-4 h-4"></i> Apple
+                                </button>
+                            </div>
+
+                            <p class="text-xs text-center text-gray-500 pt-2">
+                                Don't have an account? <button onclick="navigateTo('signup')" class="font-bold text-brand-dark hover:underline">Sign up for free</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-signup" class="page-section">
+            <div class="py-6 px-4 max-w-7xl mx-auto min-h-[85vh] flex items-center justify-center">
+                <div class="w-full bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 grid lg:grid-cols-12 min-h-[620px]">
+                    <!-- Left Form Column -->
+                    <div class="lg:col-span-6 p-8 sm:p-12 flex flex-col justify-center">
+                        <div class="max-w-md mx-auto w-full space-y-5">
+                            <div>
+                                <h2 class="text-3xl font-extrabold text-gray-900">Create Account</h2>
+                                <p class="text-xs text-gray-500 mt-1">Join thousands of verified real estate buyers and sellers</p>
+                            </div>
+
+                            <!-- Role Selector Tabs -->
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">I am registering as a:</label>
+                                <div class="grid grid-cols-3 gap-2 bg-gray-100 p-1 rounded-xl text-xs font-bold">
+                                    <button type="button" onclick="setRole('buyer')" id="role-buyer" class="role-btn py-2 rounded-lg bg-white text-black shadow-sm">Buyer</button>
+                                    <button type="button" onclick="setRole('seller')" id="role-seller" class="role-btn py-2 rounded-lg text-gray-500">Seller</button>
+                                    <button type="button" onclick="setRole('agent')" id="role-agent" class="role-btn py-2 rounded-lg text-gray-500">Agent</button>
+                                </div>
+                            </div>
+
+                            <form onsubmit="handleAuthSubmit(event, 'Account created successfully!')" class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Full Name</label>
+                                    <input type="text" required placeholder="Alexander Vance" class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Email Address</label>
+                                    <input type="email" required placeholder="alexander@example.com" class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Create Password</label>
+                                    <input type="password" required placeholder="At least 8 characters" class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-dark">
+                                </div>
+
+                                <div class="flex items-center gap-2 text-xs text-gray-600 pt-1">
+                                    <input type="checkbox" required class="rounded border-gray-300 text-brand-dark focus:ring-brand-lime">
+                                    <span>I agree to the <a href="#" class="underline">Terms of Service</a> & <a href="#" class="underline">Privacy Policy</a></span>
+                                </div>
+
+                                <button type="submit" class="w-full py-3.5 bg-brand-dark text-white font-bold text-sm rounded-xl hover:bg-black transition shadow-md">
+                                    Create Account
+                                </button>
+                            </form>
+
+                            <p class="text-xs text-center text-gray-500 pt-2">
+                                Already have an account? <button onclick="navigateTo('signin')" class="font-bold text-brand-dark hover:underline">Sign in instead</button>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right Photo Column -->
+                    <div class="lg:col-span-6 relative hidden lg:flex flex-col justify-between p-12 text-white">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80" class="absolute inset-0 w-full h-full object-cover" alt="Modern Architecture">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/30"></div>
+                        
+                        <div class="relative z-10 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-full bg-brand-lime text-black flex items-center justify-center font-extrabold text-sm">R</span>
+                            <span class="font-bold text-xl text-white">RealEstate Member Portal</span>
+                        </div>
+
+                        <div class="relative z-10 space-y-3">
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2 text-xs font-semibold text-brand-lime">
+                                    <i data-lucide="check" class="w-4 h-4"></i> Priority Access to Off-Market Estates
+                                </div>
+                                <div class="flex items-center gap-2 text-xs font-semibold text-brand-lime">
+                                    <i data-lucide="check" class="w-4 h-4"></i> Direct Concierge Messaging & VIP Tours
+                                </div>
+                                <div class="flex items-center gap-2 text-xs font-semibold text-brand-lime">
+                                    <i data-lucide="check" class="w-4 h-4"></i> Automated Investment Yield Alerts
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="gallery-modal" class="fixed inset-0 z-50 bg-black/90 hidden flex-col justify-between p-4 sm:p-8">
+        <div class="flex justify-between items-center text-white">
+            <span id="gallery-counter" class="text-xs font-bold text-gray-400">Photo 1 of 3</span>
+            <button onclick="closeGalleryModal()" class="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+
+        <div class="relative flex-1 flex items-center justify-center my-4">
+            <img id="gallery-modal-img" src="" class="max-h-[75vh] max-w-full rounded-2xl object-contain shadow-2xl" alt="Gallery View">
+            <button onclick="prevGalleryImage()" class="absolute left-2 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/20 hover:bg-white text-black transition"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+            <button onclick="nextGalleryImage()" class="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/20 hover:bg-white text-black transition"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+        </div>
+
+        <div class="text-center text-xs text-gray-400 font-medium">
+            Use arrow keys or click buttons to navigate high-res property views.
+        </div>
+    </div>
+
+
+    <!-- Footer Section -->
+    <footer class="bg-white border-t border-gray-200 pt-16 pb-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Top Footer Banner Grid -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 pb-12 border-b border-gray-100">
+                <div class="max-w-2xl">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                        Discover Nature's Wonders with Expert Guidance
+                    </h2>
+                </div>
+                <div class="text-left md:text-right space-y-1">
+                    <p class="text-xs text-gray-400 font-semibold uppercase">Get in Touch</p>
+                    <p class="text-sm font-bold text-gray-900">+1 (800) 275-8930</p>
+                    <p class="text-xs text-gray-600">contact@realestate.com</p>
+                </div>
+            </div>
+
+            <!-- Middle Navigation Links -->
+            <div class="py-8 flex flex-col sm:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-brand-dark text-white flex items-center justify-center font-extrabold text-sm">
+                        R
+                    </span>
+                    <span class="font-bold text-lg">RealEstate</span>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 text-xs font-semibold text-gray-600">
+                    <button type="button" onclick="navigateTo('home')" class="hover:text-black transition">Home</button>
+                    <a href="#about" class="hover:text-black transition">About</a>
+                    <a href="#properties" class="hover:text-black transition">Properties</a>
+                    <a href="#faq" class="hover:text-black transition">Contact</a>
+                    <a href="#faq" class="hover:text-black transition">FAQs</a>
+                </div>
+            </div>
+
+            <!-- Bottom Legal & Copyright -->
+            <div class="pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-4">
+                <p>© 2026 RealEstate. All rights reserved.</p>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="hover:text-gray-600 transition">Terms of Service</a>
+                    <a href="#" class="hover:text-gray-600 transition">Privacy Policy</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Filter Tabs Logic
+        function setFilterTab(activeTab) {
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('bg-white', 'shadow-sm', 'text-black');
+                tab.classList.add('text-gray-500');
+            });
+            const targetBtn = document.getElementById(`tab-${activeTab}`);
+            if (targetBtn) {
+                targetBtn.classList.add('bg-white', 'shadow-sm', 'text-black');
+                targetBtn.classList.remove('text-gray-500');
+            }
+        }
+
+        // Search Action Mock
+        function triggerSearch() {
+            const propertiesElem = document.getElementById('properties');
+            if (propertiesElem) {
+                propertiesElem.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Toggle Favorite Heart Button
+        function toggleFavorite(btn) {
+            const icon = btn.querySelector('i');
+            if (btn.classList.contains('text-red-500')) {
+                btn.classList.remove('text-red-500');
+                btn.classList.add('text-gray-700');
+            } else {
+                btn.classList.add('text-red-500');
+                btn.classList.remove('text-gray-700');
+            }
+        }
+
+        // FAQ Accordion Toggle
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            const isOpen = !content.classList.contains('hidden');
+
+            // Close all contents first
+            document.querySelectorAll('.faq-content').forEach(item => item.classList.add('hidden'));
+            document.querySelectorAll('#faq button i').forEach(i => i.classList.remove('rotate-180'));
+
+            // Toggle selected
+            if (!isOpen) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // Testimonials Dynamic Data & Slider
+        const testimonials = [
+            {
+                quote: `"Working with this team was a pleasure. They understood our vision and helped us find a property that exceeded our expectations. We couldn't have done it without them!"`,
+                author: "Tyler Herman",
+                role: "Property Investor",
+                img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                quote: `"The search tool matched us with a lakefront estate within 48 hours. The transaction was effortless from digital offer to escrow signature."`,
+                author: "Sophia Vance",
+                role: "Architectural Designer",
+                img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                quote: `"Unmatched service quality and verified listings. Knowing every property was pre-inspected gave us total confidence in making our purchase."`,
+                author: "Marcus Sterling",
+                role: "Tech Entrepreneur",
+                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        let currentTestimonialIndex = 0;
+
+        function updateTestimonial() {
+            const t = testimonials[currentTestimonialIndex];
+            document.getElementById('testimonial-quote').innerText = t.quote;
+            document.getElementById('testimonial-author').innerText = t.author;
+            document.getElementById('testimonial-role').innerText = t.role;
+            document.getElementById('testimonial-img').src = t.img;
+        }
+
+        function nextTestimonial() {
+            currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonials.length;
+            updateTestimonial();
+        }
+
+        function prevTestimonial() {
+            currentTestimonialIndex = (currentTestimonialIndex - 1 + testimonials.length) % testimonials.length;
+            updateTestimonial();
+        }
+
+        // Sample Property Database
+        const sampleProperties = [
+            { id: 1, title: "The Obsidian Glass Villa", price: 3450000, beds: 5, baths: 4.5, sqft: 4850, status: "For Sale", type: "Villa", location: "Beverly Hills, CA", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
+            { id: 2, title: "The Minimalist Timber Retreat", price: 890000, beds: 3, baths: 2, sqft: 2100, status: "For Sale", type: "Retreat", location: "Portland, OR", img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" },
+            { id: 3, title: "Modern Prairie Estate", price: 2450000, beds: 5, baths: 4, sqft: 3900, status: "For Sale", type: "Estate", location: "Austin, TX", img: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80" },
+            { id: 4, title: "Urban Glass Penthouse", price: 4500, beds: 2, baths: 2, sqft: 1400, status: "For Rent", type: "Penthouse", location: "Manhattan, NY", img: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=800&q=80" },
+            { id: 5, title: "Cedar Creek Lakeside Lodge", price: 1780000, beds: 4, baths: 3, sqft: 3100, status: "For Sale", type: "Lodge", location: "Lake Tahoe, NV", img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" },
+            { id: 6, title: "The Glasshouse Meadow Manor", price: 1150000, beds: 3, baths: 2.5, sqft: 2250, status: "For Sale", type: "Manor", location: "Aspen, CO", img: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=800&q=80" }
+        ];
+
+        // Gallery Modal State
+        const galleryImages = [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
+        ];
+        let currentGalleryIndex = 0;
+
+        // SINGLE PAGE ROUTER
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            const targetSection = document.getElementById(`page-${pageId}`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update Navigation Button States
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'shadow-sm', 'text-black');
+                btn.classList.add('text-gray-600');
+            });
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-white', 'shadow-sm', 'text-black');
+                activeNav.classList.remove('text-gray-600');
+            }
+
+            if (pageId === 'listings') {
+                renderPropertyListings(sampleProperties);
+            }
+        }
+        
+        // Mobile Menu Toggle Functions
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
+            const isHidden = mobileMenu.classList.contains('hidden');
+
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                mobileMenu.classList.add('hidden');
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
+
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                menuIcon.setAttribute('data-lucide', 'menu');
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+        }
+
+        // Render Property Cards dynamically
+        function renderPropertyListings(items) {
+            const container = document.getElementById('listings-container');
+            if (!container) return;
+            container.innerHTML = items.map(p => `
+                <div class="bg-white rounded-3xl overflow-hidden border border-gray-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+                    <div class="relative h-56 overflow-hidden cursor-pointer" onclick="navigateTo('detail')">
+                        <img src="${p.img}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="${p.title}">
+                        <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-gray-900">${p.status}</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-xs text-gray-500 font-medium mb-1">
+                                <span>${p.beds} Beds</span> • <span>${p.baths} Baths</span> • <span>${p.sqft.toLocaleString()} sqft</span>
+                            </div>
+                            <h3 class="text-base font-bold text-gray-900 group-hover:text-black cursor-pointer" onclick="navigateTo('detail')">${p.title}</h3>
+                            <p class="text-xs text-gray-400 mt-0.5">${p.location}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
+                            <div>
+                                <span class="text-[10px] text-gray-400 font-semibold uppercase">Price</span>
+                                <p class="text-lg font-extrabold text-gray-900">$${p.price.toLocaleString()}${p.status === 'For Rent' ? '/mo' : ''}</p>
+                            </div>
+                            <button onclick="navigateTo('detail')" class="w-9 h-9 rounded-full bg-gray-100 group-hover:bg-brand-lime text-black flex items-center justify-center transition">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Listing View Switcher
+        function setListingView(view) {
+            const container = document.getElementById('listings-container');
+            const gridBtn = document.getElementById('view-grid-btn');
+            const listBtn = document.getElementById('view-list-btn');
+
+            if (view === 'list') {
+                container.className = "grid grid-cols-1 gap-4";
+                listBtn.className = "p-1.5 rounded-full bg-white shadow-sm text-black";
+                gridBtn.className = "p-1.5 rounded-full text-gray-500 hover:text-black";
+            } else {
+                container.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+                gridBtn.className = "p-1.5 rounded-full bg-white shadow-sm text-black";
+                listBtn.className = "p-1.5 rounded-full text-gray-500 hover:text-black";
+            }
+        }
+
+        // Price Filter Updater
+        function updatePriceLabel(val) {
+            document.getElementById('price-value').innerText = `$${parseInt(val).toLocaleString()}`;
+            filterPropertyListings();
+        }
+
+        function filterPropertyListings() {
+            const searchVal = document.getElementById('listing-search-input')?.value.toLowerCase() || '';
+            const maxPrice = parseInt(document.getElementById('price-range')?.value || 10000000);
+            
+            const filtered = sampleProperties.filter(p => {
+                const matchesSearch = p.title.toLowerCase().includes(searchVal) || p.location.toLowerCase().includes(searchVal);
+                const matchesPrice = p.price <= maxPrice;
+                return matchesSearch && matchesPrice;
+            });
+            renderPropertyListings(filtered);
+        }
+
+        function resetListingFilters() {
+            if(document.getElementById('listing-search-input')) document.getElementById('listing-search-input').value = '';
+            if(document.getElementById('price-range')) document.getElementById('price-range').value = 5000000;
+            updatePriceLabel(5000000);
+        }
+
+        // Bedroom Filter Button Group
+        function setBedFilter(btn, val) {
+            document.querySelectorAll('.bed-filter-btn').forEach(b => {
+                b.className = "bed-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg border border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100";
+            });
+            btn.className = "bed-filter-btn flex-1 py-1.5 text-xs font-bold rounded-lg border border-gray-200 bg-brand-dark text-white";
+        }
+
+        // Home Tab Switcher
+        function setFilterTab(tab) {
+            document.querySelectorAll('.home-tab').forEach(t => t.className = "home-tab px-4 py-1.5 rounded-full text-gray-500 hover:text-black");
+            document.getElementById(`tab-${tab}`).className = "home-tab px-4 py-1.5 rounded-full bg-white shadow-sm text-black";
+        }
+
+        // Role Switcher for Sign Up Page
+        function setRole(role) {
+            document.querySelectorAll('.role-btn').forEach(b => b.className = "role-btn py-2 rounded-lg text-gray-500");
+            document.getElementById(`role-${role}`).className = "role-btn py-2 rounded-lg bg-white text-black shadow-sm font-bold";
+        }
+
+        // Hotspot Callout Details
+        function showHotspotDetail(title, desc) {
+            document.getElementById('hotspot-title').innerText = title;
+            document.getElementById('hotspot-desc').innerText = desc;
+        }
+
+        // Floor Plan Tab Switcher
+        function setFloorplanTab(tab) {
+            document.querySelectorAll('.fp-tab').forEach(t => t.className = "fp-tab px-3 py-1 rounded-full text-gray-500");
+            document.getElementById(`fp-tab-${tab}`).className = "fp-tab px-3 py-1 rounded-full bg-white shadow-sm text-black font-bold";
+            const textElem = document.getElementById('floorplan-text');
+            if (tab === 'upper') {
+                textElem.innerText = "Upper Level: 2,050 sqft | 4 En-Suite Bedrooms, Private Lounge & Sky Terrace";
+            } else {
+                textElem.innerText = "Ground Floor: 2,800 sqft | Master Suite, Great Room, Chef's Kitchen & Infinity Terrace";
+            }
+        }
+
+        // Gallery Modal Handler
+        function openGalleryModal(index) {
+            currentGalleryIndex = index;
+            document.getElementById('gallery-modal-img').src = galleryImages[currentGalleryIndex];
+            document.getElementById('gallery-counter').innerText = `Photo ${currentGalleryIndex + 1} of ${galleryImages.length}`;
+            document.getElementById('gallery-modal').classList.remove('hidden');
+            document.getElementById('gallery-modal').classList.add('flex');
+        }
+
+        function closeGalleryModal() {
+            document.getElementById('gallery-modal').classList.add('hidden');
+            document.getElementById('gallery-modal').classList.remove('flex');
+        }
+
+        function nextGalleryImage() {
+            currentGalleryIndex = (currentGalleryIndex + 1) % galleryImages.length;
+            openGalleryModal(currentGalleryIndex);
+        }
+
+        function prevGalleryImage() {
+            currentGalleryIndex = (currentGalleryIndex - 1 + galleryImages.length) % galleryImages.length;
+            openGalleryModal(currentGalleryIndex);
+        }
+
+        // Toast Notification System
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "bg-brand-dark text-white text-xs font-bold px-4 py-3 rounded-2xl shadow-2xl border border-gray-700 flex items-center gap-2 transition-all duration-300 transform translate-y-2 pointer-events-auto";
+            toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-brand-lime"></i> ${message}`;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Form Handlers
+        function handleAgentInquiry(e) {
+            e.preventDefault();
+            showToast("Tour request sent to Elena Rostova!");
+            e.target.reset();
+        }
+
+        function handleAuthSubmit(e, message) {
+            e.preventDefault();
+            showToast(message);
+            setTimeout(() => navigateTo('home'), 1200);
+        }
+
+        // Initial Load Configuration
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPropertyListings(sampleProperties);
+        });
+    </script>
+</body>
+</html>
